@@ -1,0 +1,1551 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Gym Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .dark body {
+            background-color: #121212;
+        }
+        
+        /* Animation classes */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translate3d(0, 30px, 0);
+            }
+            to { 
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes slideInLeft {
+            from { 
+                opacity: 0;
+                transform: translate3d(-30px, 0, 0);
+            }
+            to { 
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from { 
+                opacity: 0;
+                transform: translate3d(30px, 0, 0);
+            }
+            to { 
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Apply animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.5s ease-out;
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.5s ease-out;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        .spin {
+            animation: spin 1s linear infinite;
+        }
+        
+        /* Delay classes */
+        .delay-100 {
+            animation-delay: 0.1s;
+        }
+        
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+        
+        .delay-300 {
+            animation-delay: 0.3s;
+        }
+        
+        .delay-400 {
+            animation-delay: 0.4s;
+        }
+        
+        .delay-500 {
+            animation-delay: 0.5s;
+        }
+        
+        /* Button animation */
+        .btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.4);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+        
+        /* Hover effects */
+        .hover-lift {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Fancy background */
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+        
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        .dark .glassmorphism {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .dark ::-webkit-scrollbar-track {
+            background: #2d3748;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #c5c5c5;
+            border-radius: 10px;
+        }
+        
+        .dark ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a3a3a3;
+        }
+        
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #718096;
+        }
+        
+        /* Form focus states */
+        .form-input:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4);
+            outline: none;
+            border-color: #6366f1;
+        }
+        
+        /* Loading animation */
+        .loading-dots {
+            display: flex;
+            column-gap: 4px;
+            justify-content: center;
+        }
+        
+        .loading-dots .dot {
+            height: 8px;
+            width: 8px;
+            border-radius: 50%;
+            background-color: #6366f1;
+        }
+        
+        .loading-dots .dot:nth-child(1) {
+            animation: bounce 1s infinite 0.1s;
+        }
+        
+        .loading-dots .dot:nth-child(2) {
+            animation: bounce 1s infinite 0.2s;
+        }
+        
+        .loading-dots .dot:nth-child(3) {
+            animation: bounce 1s infinite 0.3s;
+        }
+        
+        /* Card design */
+        .card {
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Badge design */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .badge-success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: rgb(16, 185, 129);
+        }
+        
+        .dark .badge-success {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: rgb(52, 211, 153);
+        }
+        
+        .badge-danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: rgb(239, 68, 68);
+        }
+        
+        .dark .badge-danger {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: rgb(248, 113, 113);
+        }
+        
+        .badge-warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: rgb(245, 158, 11);
+        }
+        
+        .dark .badge-warning {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: rgb(251, 191, 36);
+        }
+        
+        /* Logo design */
+        .logo-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            color: #6366f1;
+            z-index: 2;
+        }
+        
+        .logo-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0.1) 100%);
+            border-radius: 20px;
+            transform: rotate(45deg);
+            animation: pulse 3s infinite;
+        }
+        
+        /* Fancy divider */
+        .fancy-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(99, 102, 241, 0.5), transparent);
+            margin: 1.5rem 0;
+        }
+        
+        /* Wave background */
+        .wave-bg {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .wave-bg::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%236366f1' fill-opacity='0.1' d='M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,261.3C960,256,1056,224,1152,208C1248,192,1344,192,1392,192L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: -1;
+        }
+        
+        /* Shiny button effect */
+        .btn-shiny {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-shiny::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right, 
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.3) 50%,
+                rgba(255,255,255,0) 100%
+            );
+            transform: rotate(30deg);
+            transition: 0.7s;
+        }
+        
+        .btn-shiny:hover::before {
+            transform: rotate(30deg) translate(300%, 0);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Dark mode detection -->
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    </script>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-primary py-12 px-4 wave-bg">
+        <div class="max-w-md w-full space-y-8 fade-in-up">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-2xl">
+                <!-- Logo -->
+                <div class="text-center mb-10">
+                    <div class="logo-container">
+                        <div class="logo-bg"></div>
+                        <i class="fas fa-dumbbell logo"></i>
+                    </div>
+                    <h2 class="mt-4 text-3xl font-extrabold text-gray-900 dark:text-white fade-in delay-100">Power Gym</h2>
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 fade-in delay-200">Subscriber Management System</p>
+                </div>
+                
+                <!-- Login Form -->
+                <div id="loginError" class="rounded-lg bg-red-50 dark:bg-red-900/30 p-4 text-red-800 dark:text-red-200 mb-6 hidden slide-in-left">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-circle text-red-500 dark:text-red-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium">Invalid credentials</h3>
+                            <p class="text-sm mt-1">Please check your username and password and try again.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="loginForm" class="space-y-6 fade-in delay-300">
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
+                        <div class="mt-1 relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-user text-gray-400"></i>
+                            </div>
+                            <input id="username" name="username" type="text" required class="form-input appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 dark:text-white bg-white dark:bg-gray-700 transition duration-150" placeholder="Enter your username">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                        <div class="mt-1 relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <input id="password" name="password" type="password" required class="form-input appearance-none block w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 dark:text-white bg-white dark:bg-gray-700 transition duration-150" placeholder="Enter your password">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <button type="button" id="togglePassword" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember" name="remember" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                            <label for="remember" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                Remember me
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <button type="submit" id="loginBtn" class="btn btn-shiny group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none shadow-lg transition duration-150">
+                            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                                <i class="fas fa-sign-in-alt text-indigo-300 group-hover:text-indigo-200 transition ease-in-out duration-150"></i>
+                            </span>
+                            Sign in
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Demo info -->
+                <div class="mt-6">
+                    <div class="fancy-divider"></div>
+                    <div class="rounded-lg bg-indigo-50 dark:bg-indigo-900/30 p-4 fade-in delay-400">
+                        <h3 class="text-sm font-medium text-indigo-800 dark:text-indigo-300">Demo Credentials</h3>
+                        <div class="mt-2 text-sm text-indigo-700 dark:text-indigo-400">
+                            <p class="flex items-center">
+                                <span class="font-bold w-24">Username:</span>
+                                <span class="font-mono bg-indigo-100 dark:bg-indigo-800/50 px-2 py-1 rounded">admin</span>
+                            </p>
+                            <p class="flex items-center mt-1">
+                                <span class="font-bold w-24">Password:</span>
+                                <span class="font-mono bg-indigo-100 dark:bg-indigo-800/50 px-2 py-1 rounded">power123</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="appPage" class="hidden min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-4 py-6">
+            <!-- Header -->
+            <header class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 fade-in">
+                <div class="flex flex-col sm:flex-row justify-between items-center">
+                    <div class="flex items-center mb-4 sm:mb-0">
+                        <div class="relative mr-3">
+                            <div class="absolute inset-0 bg-indigo-500 rounded-lg opacity-20 pulse"></div>
+                            <i class="fas fa-dumbbell text-3xl text-indigo-600 relative z-10"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">Power Gym</h1>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Subscriber Management</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-wrap justify-center">
+                        <div id="syncStatus" class="text-sm bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full flex items-center">
+                            <span id="syncIcon" class="mr-1"><i class="fas fa-save text-green-500"></i></span>
+                            <span id="syncText">All changes saved locally</span>
+                        </div>
+                        <button id="addSubscriberBtn" class="btn bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-all flex items-center">
+                            <i class="fas fa-plus mr-2"></i>Add Subscriber
+                        </button>
+                        <button id="logoutBtn" class="btn bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium py-2 px-4 rounded-lg transition-all flex items-center">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </button>
+                    </div>
+                </div>
+                <!-- Search and Filter -->
+                <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                    <div class="relative flex-grow">
+                        <input type="text" id="searchInput" placeholder="Search subscribers..." 
+                            class="form-input w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base transition-all">
+                        <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+                    </div>
+                    <div class="flex gap-3 flex-wrap sm:flex-nowrap">
+                        <select id="statusFilter" class="form-input border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white py-3 px-3 text-base transition-all">
+                            <option value="all">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="expired">Expired</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                        <select id="sortBy" class="form-input border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white py-3 px-3 text-base transition-all">
+                            <option value="nameAsc">Name (A-Z)</option>
+                            <option value="nameDesc">Name (Z-A)</option>
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main>
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="card bg-white dark:bg-gray-800 p-6 border border-gray-100 dark:border-gray-700 slide-in-left" style="animation-delay: 0.1s">
+                        <div class="flex items-center">
+                            <div class="rounded-full bg-blue-100 dark:bg-blue-900/50 p-4 mr-4">
+                                <i class="fas fa-users text-blue-500 dark:text-blue-300"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Total Subscribers</p>
+                                <p class="text-3xl font-bold text-gray-800 dark:text-white" id="totalCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card bg-white dark:bg-gray-800 p-6 border border-gray-100 dark:border-gray-700 slide-in-left" style="animation-delay: 0.2s">
+                        <div class="flex items-center">
+                            <div class="rounded-full bg-green-100 dark:bg-green-900/50 p-4 mr-4">
+                                <i class="fas fa-check-circle text-green-500 dark:text-green-300"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Active Subscriptions</p>
+                                <p class="text-3xl font-bold text-gray-800 dark:text-white" id="activeCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card bg-white dark:bg-gray-800 p-6 border border-gray-100 dark:border-gray-700 slide-in-left" style="animation-delay: 0.3s">
+                        <div class="flex items-center">
+                            <div class="rounded-full bg-red-100 dark:bg-red-900/50 p-4 mr-4">
+                                <i class="fas fa-clock text-red-500 dark:text-red-300"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Expired Subscriptions</p>
+                                <p class="text-3xl font-bold text-gray-800 dark:text-white" id="expiredCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card bg-white dark:bg-gray-800 p-6 border border-gray-100 dark:border-gray-700 slide-in-left" style="animation-delay: 0.4s">
+                        <div class="flex items-center">
+                            <div class="rounded-full bg-yellow-100 dark:bg-yellow-900/50 p-4 mr-4">
+                                <i class="fas fa-hourglass-half text-yellow-500 dark:text-yellow-300"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Pending Approval</p>
+                                <p class="text-3xl font-bold text-gray-800 dark:text-white" id="pendingCount">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subscribers Table/List -->
+                <div class="card bg-white dark:bg-gray-800 shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 slide-in-right" style="animation-delay: 0.5s">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
+                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Phone</th>
+                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Plan</th>
+                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Expiry Date</th>
+                                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subscribersList" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                <!-- Subscribers will be inserted here by JavaScript -->
+                                <tr class="empty-state">
+                                    <td colspan="6" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                                        <i class="fas fa-users text-5xl mb-4 block"></i>
+                                        <p class="text-lg">No subscribers yet</p>
+                                        <p class="text-sm mt-1">Add your first subscriber to get started!</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Mobile List View (shown on small screens) -->
+                <div id="mobileSubscribersList" class="lg:hidden mt-6 space-y-4">
+                    <!-- Mobile cards will be inserted here -->
+                </div>
+            </main>
+
+            <!-- Subscriber Form Modal -->
+            <div id="subscriberModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden fade-in-up">
+                    <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+                        <h2 id="modalTitle" class="text-xl font-bold text-gray-800 dark:text-white">Add New Subscriber</h2>
+                        <button id="closeModal" class="btn text-gray-400 hover:text-gray-500 focus:outline-none transition-colors">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <form id="subscriberForm" class="p-6 space-y-4">
+                        <input type="hidden" id="subscriberId">
+                        <div class="space-y-2">
+                            <label for="fullName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+                            <input type="text" id="fullName" required class="form-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base transition-all">
+                        </div>
+                        <div class="space-y-2">
+                            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
+                            <input type="tel" id="phone" required class="form-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base transition-all">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label for="membershipPlan" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Membership Plan</label>
+                                <select id="membershipPlan" required class="form-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base transition-all">
+                                    <option value="25000 IQD / Month">25000 IQD / Month</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                                <select id="status" required class="form-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base transition-all">
+                                    <option value="active">Active</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="expired">Expired</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="expiryDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Expiry Date</label>
+                            <input type="date" id="expiryDate" required class="form-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base transition-all">
+                        </div>
+                        <div class="space-y-2">
+                            <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Notes</label>
+                            <textarea id="notes" rows="2" class="form-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base transition-all"></textarea>
+                        </div>
+                        <div class="pt-2 flex justify-end space-x-3">
+                            <button type="button" id="cancelBtn" class="btn px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none transition-colors">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-lg focus:outline-none transition-colors">
+                                <span id="submitBtnText">Add Subscriber</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Subscriber Detail Modal -->
+            <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden fade-in-up">
+                    <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+                        <h2 id="detailTitle" class="text-xl font-bold text-gray-800 dark:text-white">Subscriber Details</h2>
+                        <button id="closeDetailModal" class="btn text-gray-400 hover:text-gray-500 focus:outline-none transition-colors">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div id="subscriberDetails" class="p-6 space-y-4">
+                        <!-- Details will be inserted here -->
+                    </div>
+                    <div class="border-t border-gray-200 dark:border-gray-700 p-4 flex justify-end space-x-3">
+                        <button id="editFromDetail" class="btn px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-lg focus:outline-none transition-colors">
+                            <i class="fas fa-edit mr-2"></i> Edit
+                        </button>
+                        <button id="whatsappFromDetail" class="btn px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg focus:outline-none transition-colors flex items-center">
+                            <i class="fab fa-whatsapp mr-2"></i> WhatsApp
+                        </button>
+                        <button id="closeDetailBtn" class="btn px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none transition-colors">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Confirmation Modal -->
+            <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden fade-in-up">
+                    <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+                        <h2 class="text-xl font-bold text-gray-800 dark:text-white">Confirm Deletion</h2>
+                        <button id="closeDeleteModal" class="btn text-gray-400 hover:text-gray-500 focus:outline-none transition-colors">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="p-6 text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500">
+                            <i class="fas fa-trash text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Delete Subscriber</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Are you sure you want to delete this subscriber? This action cannot be undone.</p>
+                        <p id="deleteSubscriberName" class="mt-3 font-medium text-red-600 dark:text-red-400"></p>
+                    </div>
+                    <div class="border-t border-gray-200 dark:border-gray-700 p-4 flex justify-end space-x-3">
+                        <button id="cancelDeleteBtn" class="btn px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none transition-colors">
+                            Cancel
+                        </button>
+                        <button id="confirmDeleteBtn" class="btn px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg focus:outline-none transition-colors">
+                            <i class="fas fa-trash mr-2"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WhatsApp Message Modal -->
+            <div id="whatsappModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden fade-in-up">
+                    <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+                        <h2 class="text-xl font-bold text-gray-800 dark:text-white">Send WhatsApp Message</h2>
+                        <button id="closeWhatsappModal" class="btn text-gray-400 hover:text-gray-500 focus:outline-none transition-colors">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                                <i class="fab fa-whatsapp text-2xl text-green-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 dark:text-gray-300">Sending message to</p>
+                                <p id="whatsappRecipientName" class="font-medium text-gray-800 dark:text-white text-lg"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label for="whatsappMessage" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Message</label>
+                            <textarea id="whatsappMessage" rows="4" class="form-input w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base transition-all"></textarea>
+                        </div>
+                        
+                        <div id="messagePreview" class="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg border border-green-200 dark:border-green-800">
+                            <h3 class="text-sm font-medium text-green-800 dark:text-green-400 mb-2 flex items-center">
+                                <i class="far fa-eye mr-2"></i> Message Preview
+                            </h3>
+                            <p id="previewText" class="text-sm text-green-700 dark:text-green-300 whitespace-pre-line"></p>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-200 dark:border-gray-700 p-4 flex justify-end space-x-3">
+                        <button id="cancelWhatsappBtn" class="btn px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none transition-colors">
+                            Cancel
+                        </button>
+                        <button id="sendWhatsappBtn" class="btn btn-shiny px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg focus:outline-none transition-colors flex items-center">
+                            <i class="fab fa-whatsapp mr-2"></i> Send Message
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Sent Notification -->
+            <div id="notificationToast" class="fixed bottom-4 right-4 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg shadow-xl transform transition-transform duration-300 translate-y-20 opacity-0 flex items-center">
+                <i class="fas fa-check-circle mr-2"></i>
+                <span id="notificationMessage">Message sent successfully!</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let subscribers = [];
+        let currentSubscriberId = null;
+        
+        // DOM Elements
+        const loginPage = document.getElementById('loginPage');
+        const appPage = document.getElementById('appPage');
+        const subscribersList = document.getElementById('subscribersList');
+        const mobileSubscribersList = document.getElementById('mobileSubscribersList');
+        const subscriberModal = document.getElementById('subscriberModal');
+        const detailModal = document.getElementById('detailModal');
+        const deleteModal = document.getElementById('deleteModal');
+        const whatsappModal = document.getElementById('whatsappModal');
+        const notificationToast = document.getElementById('notificationToast');
+        const subscriberForm = document.getElementById('subscriberForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const submitBtnText = document.getElementById('submitBtnText');
+        const statusFilter = document.getElementById('statusFilter');
+        const sortBy = document.getElementById('sortBy');
+        const searchInput = document.getElementById('searchInput');
+        const whatsappMessage = document.getElementById('whatsappMessage');
+        const previewText = document.getElementById('previewText');
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const syncStatus = document.getElementById('syncStatus');
+        const syncIcon = document.getElementById('syncIcon');
+        const syncText = document.getElementById('syncText');
+        
+        // Stats elements
+        const totalCount = document.getElementById('totalCount');
+        const activeCount = document.getElementById('activeCount');
+        const expiredCount = document.getElementById('expiredCount');
+        const pendingCount = document.getElementById('pendingCount');
+
+        // Show login page immediately - NO loading screen
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            const savedUsername = localStorage.getItem('powerGymUsername');
+            const rememberMe = localStorage.getItem('powerGymRememberMe') === 'true';
+            
+            if (savedUsername && rememberMe) {
+                document.getElementById('username').value = savedUsername;
+                document.getElementById('remember').checked = true;
+                
+                // Auto login
+                initializeApp();
+            } else {
+                // Show login page
+                loginPage.classList.remove('hidden');
+            }
+            
+            // Setup event listeners
+            setupEventListeners();
+        });
+
+        // Authentication functions
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('remember').checked;
+            
+            // Login button animation
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.innerHTML = `<div class="loading-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+            
+            // Check credentials after small delay to show animation
+            setTimeout(() => {
+                // Check credentials (simplified for demo)
+                if (username === 'admin' && password === 'power123') {
+                    loginError.classList.add('hidden');
+                    
+                    // Save login info if remember me is checked
+                    if (rememberMe) {
+                        localStorage.setItem('powerGymUsername', username);
+                        localStorage.setItem('powerGymRememberMe', 'true');
+                    } else {
+                        localStorage.removeItem('powerGymUsername');
+                        localStorage.removeItem('powerGymRememberMe');
+                    }
+                    
+                    // Initialize app
+                    initializeApp();
+                } else {
+                    loginBtn.innerHTML = `<span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                        <i class="fas fa-sign-in-alt text-indigo-300 group-hover:text-indigo-200 transition ease-in-out duration-150"></i>
+                    </span>
+                    Sign in`;
+                    
+                    loginError.classList.remove('hidden');
+                }
+            }, 800);
+        }
+
+        function initializeApp() {
+            // Hide login page
+            loginPage.classList.add('hidden');
+            
+            // Show app page
+            appPage.classList.remove('hidden');
+            
+            // Load data from localStorage
+            const savedData = localStorage.getItem('powerGymSubscribers');
+            
+            if (savedData) {
+                try {
+                    subscribers = JSON.parse(savedData);
+                } catch (error) {
+                    console.error("Error parsing stored data", error);
+                    subscribers = getDefaultSubscribers();
+                }
+            } else {
+                subscribers = getDefaultSubscribers();
+                saveToLocalStorage();
+            }
+            
+            // Render data
+            renderSubscribers();
+            updateStats();
+            updateSyncStatus('local');
+        }
+
+        function logout() {
+            // Hide app page
+            appPage.classList.add('hidden');
+            
+            // Show login page
+            loginPage.classList.remove('hidden');
+            
+            // Clear password field
+            document.getElementById('password').value = '';
+        }
+
+        // Data management functions
+        function saveToLocalStorage() {
+            localStorage.setItem('powerGymSubscribers', JSON.stringify(subscribers));
+            updateSyncStatus('local');
+        }
+
+        function updateSyncStatus(status) {
+            switch(status) {
+                case 'local':
+                    syncIcon.innerHTML = '<i class="fas fa-save text-green-500"></i>';
+                    syncText.textContent = 'All changes saved locally';
+                    break;
+                case 'error':
+                    syncIcon.innerHTML = '<i class="fas fa-exclamation-circle text-red-500"></i>';
+                    syncText.textContent = 'Error saving changes';
+                    break;
+            }
+        }
+
+        // Render the subscribers list
+        function renderSubscribers(filteredList = subscribers) {
+            // Clear the lists
+            subscribersList.innerHTML = '';
+            mobileSubscribersList.innerHTML = '';
+
+            if (filteredList.length === 0) {
+                subscribersList.innerHTML = `
+                    <tr class="empty-state">
+                        <td colspan="6" class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-search text-5xl mb-4 block"></i>
+                            <p class="text-lg">No subscribers found</p>
+                            <p class="text-sm mt-1">Try adjusting your search or filters</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Render desktop view
+            filteredList.forEach((subscriber, index) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 dark:hover:bg-gray-700 transition-all';
+                
+                // Define status badge class and icon
+                let statusClass, statusIcon;
+                switch(subscriber.status) {
+                    case 'active':
+                        statusClass = 'badge badge-success';
+                        statusIcon = 'fa-check-circle';
+                        break;
+                    case 'expired':
+                        statusClass = 'badge badge-danger';
+                        statusIcon = 'fa-times-circle';
+                        break;
+                    case 'pending':
+                        statusClass = 'badge badge-warning';
+                        statusIcon = 'fa-clock';
+                        break;
+                }
+
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">${subscriber.fullName}</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Joined: ${formatDate(subscriber.joinDate)}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900 dark:text-white">${subscriber.phone}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">${subscriber.membershipPlan}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="${statusClass}">
+                            <i class="fas ${statusIcon} mr-1"></i> ${capitalizeFirstLetter(subscriber.status)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">${formatDate(subscriber.expiryDate)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right space-x-2">
+                        <button class="view-btn btn p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-indigo-500 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors" data-id="${subscriber.id}" title="View Details">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="edit-btn btn p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-indigo-500 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors" data-id="${subscriber.id}" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="whatsapp-btn btn p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-green-500 dark:text-gray-400 dark:hover:text-green-400 transition-colors" data-id="${subscriber.id}" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <button class="delete-btn btn p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 transition-colors" data-id="${subscriber.id}" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                subscribersList.appendChild(row);
+
+                // Mobile card view
+                const card = document.createElement('div');
+                card.className = 'card bg-white dark:bg-gray-800 shadow-md p-4 border border-gray-100 dark:border-gray-700';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-gray-900 dark:text-white">${subscriber.fullName}</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                ${subscriber.phone}
+                            </p>
+                        </div>
+                        <span class="${statusClass} mt-1">
+                            <i class="fas ${statusIcon} mr-1"></i> ${capitalizeFirstLetter(subscriber.status)}
+                        </span>
+                    </div>
+                    <div class="mt-4 text-sm">
+                        <div class="flex justify-between mb-2 pb-2 border-b border-gray-100 dark:border-gray-700">
+                            <span class="text-gray-500 dark:text-gray-400">Plan:</span>
+                            <span class="text-gray-900 dark:text-white font-medium">${subscriber.membershipPlan}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500 dark:text-gray-400">Expires:</span>
+                            <span class="text-gray-900 dark:text-white font-medium">${formatDate(subscriber.expiryDate)}</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-end space-x-1">
+                        <button class="view-btn btn p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-indigo-500 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors" data-id="${subscriber.id}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="edit-btn btn p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-indigo-500 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors" data-id="${subscriber.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="whatsapp-btn btn p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-green-500 dark:text-gray-400 dark:hover:text-green-400 transition-colors" data-id="${subscriber.id}">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <button class="delete-btn btn p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 transition-colors" data-id="${subscriber.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                mobileSubscribersList.appendChild(card);
+            });
+
+            // Add event listeners to the newly created buttons
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', () => viewSubscriber(parseInt(btn.dataset.id)));
+            });
+            
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', () => editSubscriber(parseInt(btn.dataset.id)));
+            });
+            
+            document.querySelectorAll('.whatsapp-btn').forEach(btn => {
+                btn.addEventListener('click', () => showWhatsappModal(parseInt(btn.dataset.id)));
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => showDeleteModal(parseInt(btn.dataset.id)));
+            });
+        }
+
+        // Update the stats cards
+        function updateStats() {
+            totalCount.textContent = subscribers.length;
+            activeCount.textContent = subscribers.filter(s => s.status === 'active').length;
+            expiredCount.textContent = subscribers.filter(s => s.status === 'expired').length;
+            pendingCount.textContent = subscribers.filter(s => s.status === 'pending').length;
+        }
+
+        // Filter and search functions
+        function filterSubscribers() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const status = statusFilter.value;
+            const sort = sortBy.value;
+            
+            // Filter by search term and status
+            let filtered = subscribers.filter(subscriber => {
+                const matchSearch = 
+                    subscriber.fullName.toLowerCase().includes(searchTerm) ||
+                    subscriber.phone.toLowerCase().includes(searchTerm) ||
+                    subscriber.membershipPlan.toLowerCase().includes(searchTerm);
+                
+                const matchStatus = status === 'all' || subscriber.status === status;
+                
+                return matchSearch && matchStatus;
+            });
+            
+            // Sort the results
+            filtered.sort((a, b) => {
+                switch(sort) {
+                    case 'nameAsc':
+                        return a.fullName.localeCompare(b.fullName);
+                    case 'nameDesc':
+                        return b.fullName.localeCompare(a.fullName);
+                    case 'newest':
+                        return new Date(b.joinDate) - new Date(a.joinDate);
+                    case 'oldest':
+                        return new Date(a.joinDate) - new Date(b.joinDate);
+                    default:
+                        return 0;
+                }
+            });
+            
+            renderSubscribers(filtered);
+        }
+
+        // Show subscriber form modal
+        function showModal(mode = 'add', id = null) {
+            modalTitle.textContent = mode === 'add' ? 'Add New Subscriber' : 'Edit Subscriber';
+            submitBtnText.textContent = mode === 'add' ? 'Add Subscriber' : 'Update Subscriber';
+            
+            // Clear form
+            subscriberForm.reset();
+            
+            if (mode === 'edit' && id !== null) {
+                const subscriber = subscribers.find(s => s.id === id);
+                if (subscriber) {
+                    document.getElementById('subscriberId').value = subscriber.id;
+                    document.getElementById('fullName').value = subscriber.fullName;
+                    document.getElementById('phone').value = subscriber.phone;
+                    document.getElementById('membershipPlan').value = subscriber.membershipPlan;
+                    document.getElementById('status').value = subscriber.status;
+                    document.getElementById('expiryDate').value = subscriber.expiryDate;
+                    document.getElementById('notes').value = subscriber.notes;
+                    currentSubscriberId = id;
+                }
+            } else {
+                currentSubscriberId = null;
+                document.getElementById('subscriberId').value = '';
+                // Set default expiry date to 30 days from now
+                const today = new Date();
+                const defaultExpiry = new Date(today);
+                defaultExpiry.setDate(today.getDate() + 30);
+                document.getElementById('expiryDate').value = defaultExpiry.toISOString().split('T')[0];
+            }
+            
+            subscriberModal.classList.remove('hidden');
+        }
+
+        // View subscriber details
+        function viewSubscriber(id) {
+            const subscriber = subscribers.find(s => s.id === id);
+            if (!subscriber) return;
+            
+            currentSubscriberId = id;
+            
+            // Define status badge class and icon
+            let statusClass, statusIcon;
+            switch(subscriber.status) {
+                case 'active':
+                    statusClass = 'badge badge-success';
+                    statusIcon = 'fa-check-circle';
+                    break;
+                case 'expired':
+                    statusClass = 'badge badge-danger';
+                    statusIcon = 'fa-times-circle';
+                    break;
+                case 'pending':
+                    statusClass = 'badge badge-warning';
+                    statusIcon = 'fa-clock';
+                    break;
+            }
+            
+            document.getElementById('detailTitle').textContent = `${subscriber.fullName}`;
+            document.getElementById('subscriberDetails').innerHTML = `
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white">${subscriber.fullName}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Member since ${formatDate(subscriber.joinDate)}</p>
+                    </div>
+                    <span class="${statusClass}">
+                        <i class="fas ${statusIcon} mr-1"></i> ${capitalizeFirstLetter(subscriber.status)}
+                    </span>
+                </div>
+                
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-5 space-y-4">
+                    <div class="flex items-center">
+                        <div class="w-8 text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <span class="text-gray-900 dark:text-white">${subscriber.phone}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-8 text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <span class="text-gray-900 dark:text-white">${subscriber.membershipPlan}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-8 text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <span class="text-gray-900 dark:text-white">Expires on ${formatDate(subscriber.expiryDate)}</span>
+                    </div>
+                </div>
+                
+                ${subscriber.notes ? `
+                <div class="mt-6">
+                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Notes:</h4>
+                    <div class="text-sm bg-gray-50 dark:bg-gray-700 p-4 rounded-xl text-gray-800 dark:text-gray-200">${subscriber.notes}</div>
+                </div>
+                ` : ''}
+            `;
+            
+            detailModal.classList.remove('hidden');
+        }
+
+        // Edit subscriber
+        function editSubscriber(id) {
+            // Close detail modal if open
+            detailModal.classList.add('hidden');
+            // Show edit modal
+            showModal('edit', id);
+        }
+
+        // Show delete confirmation modal
+        function showDeleteModal(id) {
+            const subscriber = subscribers.find(s => s.id === id);
+            if (!subscriber) return;
+            
+            currentSubscriberId = id;
+            document.getElementById('deleteSubscriberName').textContent = subscriber.fullName;
+            deleteModal.classList.remove('hidden');
+        }
+
+        // Show WhatsApp message modal
+        function showWhatsappModal(id) {
+            const subscriber = subscribers.find(s => s.id === id);
+            if (!subscriber) return;
+            
+            currentSubscriberId = id;
+            document.getElementById('whatsappRecipientName').textContent = subscriber.fullName;
+            
+            // Create default message
+            const defaultMessage = `Hello ${subscriber.fullName},\n\nThis is a reminder about your Power Gym subscription (${subscriber.membershipPlan}).\n\nYour membership ${subscriber.status === 'active' ? 'is valid until' : 'expired on'} ${formatDate(subscriber.expiryDate)}.\n\nThank you for choosing Power Gym.`;
+            
+            whatsappMessage.value = defaultMessage;
+            previewText.textContent = defaultMessage;
+            
+            whatsappModal.classList.remove('hidden');
+        }
+
+        // Send WhatsApp message
+        function sendWhatsappMessage() {
+            const subscriber = subscribers.find(s => s.id === currentSubscriberId);
+            if (!subscriber) return;
+            
+            const message = encodeURIComponent(whatsappMessage.value);
+            const phoneNumber = subscriber.phone.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+            
+            // Open WhatsApp link in new tab
+            window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+            
+            // Close the modal
+            whatsappModal.classList.add('hidden');
+            
+            // Show notification
+            showNotification('WhatsApp message prepared');
+            
+            // If this is a new subscriber, record that we notified them
+            if (subscriber.status === 'active' && isToday(subscriber.joinDate)) {
+                subscriber.notifiedViaWhatsapp = true;
+                saveToLocalStorage();
+            }
+        }
+
+        // Show notification toast
+        function showNotification(message) {
+            document.getElementById('notificationMessage').textContent = message;
+            notificationToast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                notificationToast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Handle form submission
+        function handleSubmit(e) {
+            e.preventDefault();
+            
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                phone: document.getElementById('phone').value,
+                membershipPlan: document.getElementById('membershipPlan').value,
+                status: document.getElementById('status').value,
+                expiryDate: document.getElementById('expiryDate').value,
+                notes: document.getElementById('notes').value
+            };
+            
+            if (currentSubscriberId) {
+                // Edit existing subscriber
+                const index = subscribers.findIndex(s => s.id === currentSubscriberId);
+                if (index !== -1) {
+                    subscribers[index] = {
+                        ...subscribers[index],
+                        ...formData
+                    };
+                }
+            } else {
+                // Add new subscriber
+                const newId = subscribers.length > 0 ? Math.max(...subscribers.map(s => s.id)) + 1 : 1;
+                const joinDate = new Date().toISOString().split('T')[0];
+                
+                subscribers.push({
+                    id: newId,
+                    ...formData,
+                    joinDate: joinDate
+                });
+                
+                // Show prompt to send WhatsApp message for new subscribers
+                setTimeout(() => {
+                    showWhatsappModal(newId);
+                }, 500);
+            }
+            
+            // Save data
+            saveToLocalStorage();
+            
+            // Update UI
+            renderSubscribers();
+            updateStats();
+            subscriberModal.classList.add('hidden');
+            
+            // Show notification
+            showNotification(currentSubscriberId ? 'Subscriber updated successfully' : 'New subscriber added successfully');
+        }
+
+        // Delete a subscriber
+        function deleteSubscriber() {
+            if (currentSubscriberId) {
+                subscribers = subscribers.filter(s => s.id !== currentSubscriberId);
+                
+                // Save data
+                saveToLocalStorage();
+                
+                // Update UI
+                renderSubscribers();
+                updateStats();
+                deleteModal.classList.add('hidden');
+                currentSubscriberId = null;
+                
+                // Show notification
+                showNotification('Subscriber deleted successfully');
+            }
+        }
+
+        // Default subscribers for demo
+        function getDefaultSubscribers() {
+            return [
+                {
+                    id: 1,
+                    fullName: "Ahmed Ali",
+                    phone: "0771-123-4567",
+                    membershipPlan: "25000 IQD / Month",
+                    status: "active",
+                    expiryDate: "2023-12-31",
+                    joinDate: "2023-01-15",
+                    notes: "Prefers morning workouts."
+                },
+                {
+                    id: 2,
+                    fullName: "Mohammed Hassan",
+                    phone: "0750-987-6543",
+                    membershipPlan: "25000 IQD / Month",
+                    status: "active",
+                    expiryDate: "2023-11-20",
+                    joinDate: "2023-02-10",
+                    notes: "Participates in evening sessions."
+                },
+                {
+                    id: 3,
+                    fullName: "Sara Karim",
+                    phone: "0773-222-3333",
+                    membershipPlan: "25000 IQD / Month",
+                    status: "expired",
+                    expiryDate: "2023-09-15",
+                    joinDate: "2023-03-05",
+                    notes: ""
+                },
+                {
+                    id: 4,
+                    fullName: "Mustafa Jawad",
+                    phone: "0751-444-5555",
+                    membershipPlan: "25000 IQD / Month",
+                    status: "active",
+                    expiryDate: "2024-06-30",
+                    joinDate: "2023-07-01",
+                    notes: "Has a personal locker #142."
+                },
+                {
+                    id: 5,
+                    fullName: "Layla Omar",
+                    phone: "0772-777-8888",
+                    membershipPlan: "25000 IQD / Month",
+                    status: "pending",
+                    expiryDate: "2023-11-01",
+                    joinDate: "2023-08-15",
+                    notes: "Waiting for payment confirmation."
+                }
+            ];
+        }
+
+        // Helper functions
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString();
+        }
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        function isToday(dateStr) {
+            const today = new Date();
+            const date = new Date(dateStr);
+            return date.getDate() === today.getDate() &&
+                   date.getMonth() === today.getMonth() &&
+                   date.getFullYear() === today.getFullYear();
+        }
+
+        // Password visibility toggle
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Toggle icon
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Login form
+            loginForm.addEventListener('submit', handleLogin);
+            
+            // Button click effects for all buttons
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mousedown', function() {
+                    this.classList.add('scale-95');
+                });
+                
+                btn.addEventListener('mouseup', function() {
+                    this.classList.remove('scale-95');
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    this.classList.remove('scale-95');
+                });
+            });
+            
+            // Add subscriber button
+            document.getElementById('addSubscriberBtn').addEventListener('click', () => showModal('add'));
+            
+            // Close modal buttons
+            document.getElementById('closeModal').addEventListener('click', () => subscriberModal.classList.add('hidden'));
+            document.getElementById('cancelBtn').addEventListener('click', () => subscriberModal.classList.add('hidden'));
+            
+            // Close detail modal
+            document.getElementById('closeDetailModal').addEventListener('click', () => detailModal.classList.add('hidden'));
+            document.getElementById('closeDetailBtn').addEventListener('click', () => detailModal.classList.add('hidden'));
+            document.getElementById('editFromDetail').addEventListener('click', () => {
+                detailModal.classList.add('hidden');
+                editSubscriber(currentSubscriberId);
+            });
+            document.getElementById('whatsappFromDetail').addEventListener('click', () => {
+                detailModal.classList.add('hidden');
+                showWhatsappModal(currentSubscriberId);
+            });
+            
+            // Close delete modal
+            document.getElementById('closeDeleteModal').addEventListener('click', () => deleteModal.classList.add('hidden'));
+            document.getElementById('cancelDeleteBtn').addEventListener('click', () => deleteModal.classList.add('hidden'));
+            
+            // WhatsApp modal
+            document.getElementById('closeWhatsappModal').addEventListener('click', () => whatsappModal.classList.add('hidden'));
+            document.getElementById('cancelWhatsappBtn').addEventListener('click', () => whatsappModal.classList.add('hidden'));
+            document.getElementById('sendWhatsappBtn').addEventListener('click', sendWhatsappMessage);
+            
+            // Update message preview when typing
+            whatsappMessage.addEventListener('input', () => {
+                previewText.textContent = whatsappMessage.value;
+            });
+            
+            // Confirm delete
+            document.getElementById('confirmDeleteBtn').addEventListener('click', deleteSubscriber);
+            
+            // Form submission
+            subscriberForm.addEventListener('submit', handleSubmit);
+            
+            // Search and filter
+            searchInput.addEventListener('input', filterSubscribers);
+            statusFilter.addEventListener('change', filterSubscribers);
+            sortBy.addEventListener('change', filterSubscribers);
+            
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === subscriberModal) subscriberModal.classList.add('hidden');
+                if (e.target === detailModal) detailModal.classList.add('hidden');
+                if (e.target === deleteModal) deleteModal.classList.add('hidden');
+                if (e.target === whatsappModal) whatsappModal.classList.add('hidden');
+            });
+        }
+    </script>
+</body>
+</html>
